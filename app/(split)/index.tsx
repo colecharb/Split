@@ -1,8 +1,7 @@
 import { KeyboardAvoidingView, StyleSheet } from 'react-native';
 
 import MonetaryInput from '../../components/MonetaryInput';
-import { Text, View } from '../../components/Themed';
-import { Link } from 'expo-router';
+import { View } from '../../components/Themed';
 import LinkButton from '../../components/LinkButton';
 
 export default function TabTwoScreen() {
