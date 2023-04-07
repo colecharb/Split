@@ -14,6 +14,8 @@ export default function TabTwoScreen() {
   //   setTotal(newAmount);
   // }
 
+  const totalValid = parseFloat(total) > 0;
+
   return (
     <ScreenContainer>
 
@@ -30,7 +32,8 @@ export default function TabTwoScreen() {
 
       <LinkButton
         title="Next"
-        href={{ pathname: "items", params: { total } }}
+        href={{ pathname: "items", params: { total: parseFloat(total).toFixed(2) } }}
+        disabled={!totalValid}
       />
 
     </ScreenContainer>
