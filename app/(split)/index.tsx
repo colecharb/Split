@@ -3,27 +3,37 @@ import { KeyboardAvoidingView, StyleSheet } from 'react-native';
 import MonetaryInput from '../../components/MonetaryInput';
 import { View } from '../../components/Themed';
 import LinkButton from '../../components/LinkButton';
+import ScreenContainer from '../../components/ScreenContainer';
+import { useState } from 'react';
 
 export default function TabTwoScreen() {
+
+  const [total, setTotal] = useState<string>('');
+
+  // const onChangeAmount = (newAmount: string) => {
+  //   setTotal(newAmount);
+  // }
+
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior='height'
-    >
+    <ScreenContainer>
+
       <View style={styles.container}>
+
         <MonetaryInput
           autoFocus
           placeholder='0.00'
+          value={total}
+          onChangeText={setTotal}
         />
+
       </View>
 
       <LinkButton
         title="Next"
-        href="items"
+        href={{ pathname: "items", params: { total } }}
       />
 
-
-    </KeyboardAvoidingView>
+    </ScreenContainer>
   );
 }
 
@@ -32,14 +42,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+  }
 });
