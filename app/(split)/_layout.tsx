@@ -48,7 +48,7 @@ export default function StackLayout() {
         <Stack.Screen
           name="items"
           options={{
-            title: "Eneter Items"
+            title: "Enter Items"
           }}
         />
       </Stack>
