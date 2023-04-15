@@ -1,12 +1,12 @@
-import { KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import MonetaryInput from '../../components/MonetaryInput';
 import { View } from '../../components/Themed';
-import LinkButton from '../../components/LinkButton';
+import { LinkButton } from '../../components/Buttons';
 import ScreenContainer from '../../components/ScreenContainer';
 import { useState } from 'react';
 
-export default function TabTwoScreen() {
+export default function EnterTotalScreen() {
 
   const [total, setTotal] = useState<string>('');
 
