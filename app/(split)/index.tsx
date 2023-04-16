@@ -32,7 +32,10 @@ export default function EnterTotalScreen() {
 
       <LinkButton
         title="Next"
-        href={{ pathname: "items", params: { total: parseFloat(total).toFixed(2) } }}
+        href={{
+          pathname: "items",
+          params: { total: parseFloat(total).toFixed(2) }
+        }}
         disabled={!totalValid}
       />
 
