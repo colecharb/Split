@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
-import { KeyboardAvoidingView } from "react-native";
-import Layout from "../constants/Layout";
+import { KeyboardAvoidingView, KeyboardAvoidingViewProps } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Layout from "../constants/Layout";
 
-export default function ({ children }: { children: ReactNode }) {
+export default function ({ children, ...props }: { children: ReactNode } & KeyboardAvoidingViewProps) {
 
   const safeAreaInsets = useSafeAreaInsets();
 
@@ -17,6 +17,7 @@ export default function ({ children }: { children: ReactNode }) {
         marginBottom: safeAreaInsets.bottom
       }}
       behavior='height'
+      {...props}
     >
       {children}
     </KeyboardAvoidingView>
