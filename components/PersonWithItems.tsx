@@ -2,19 +2,14 @@ import { Text, View } from "./Themed";
 import { FlatList, ListRenderItem, NativeScrollEvent, NativeSyntheticEvent, Pressable, StyleSheet, TextInput } from "react-native";
 import useColorScheme from "../utils/useColorScheme";
 import Colors from "../constants/Colors";
-import { LegacyRef, useRef, useState } from "react";
+import { LegacyRef, SetStateAction, useEffect, useRef, useState } from "react";
 import { Button } from "./Buttons";
 import Layout from "../constants/Layout";
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
-// const dummyItems: number[] = [
-//   Math.round(Math.random() * 1000) / 100 + 2,
-//   Math.round(Math.random() * 1000) / 100 + 2,
-//   Math.round(Math.random() * 1000) / 100 + 2
-// ]
 
-type ItemData = {
+export type ItemData = {
   id: string, // for selecting and editing individual items
   amount: number,
 }
@@ -49,16 +44,32 @@ function Item({ id, amount }: ItemData) {
 }
 
 
-type PersonWithItemsParams = {
-  defaultName: string
+export type Person = {
+  name: string,
+  items: ItemData[],
+  id: string,
 }
 
-export default function ({ defaultName }: PersonWithItemsParams) {
+type PersonWithItemsParams = {
+  defaultName: string,
+  person: Person,
+  setPerson: (person: Person) => void, // sets state in parent
+}
 
-  const [name, setName] = useState<string>('')
-  const [items, setItems] = useState<ItemData[]>([]);
+export default function ({ defaultName, person, setPerson }: PersonWithItemsParams) {
 
-  const ref_FlatList = useRef<FlatList>(null);
+  // const [name, setName] = useState<string>('')
+  // const [items, setItems] = useState<ItemData[]>([]);
+
+  const setName = (name: string) => {
+    setPerson({ ...person, name })
+  }
+
+  const setItems = (items: ItemData[]) => {
+    setPerson({ ...person, items })
+  }
+
+  // const ref_FlatList = useRef<FlatList>(null);
 
   const theme = useColorScheme();
   const styles = makeStyles();
@@ -67,10 +78,10 @@ export default function ({ defaultName }: PersonWithItemsParams) {
 
     const newItem: ItemData = {
       id: uuidv4(),
-      amount: Math.random() * 50
+      amount: (Math.random() * 14) + 1
     }
 
-    setItems(currentItems => [newItem, ...currentItems]);
+    setItems([newItem, ...person.items]);
   }
 
   const renderItem = ({ item: { id, amount } }: { item: ItemData }) => (
@@ -80,8 +91,9 @@ export default function ({ defaultName }: PersonWithItemsParams) {
     />
   );
 
-  const ListFooterComponent = () => (
+  const ListHeaderComponent = () => (
     <Button
+      viewStyle={{ margin: Layout.margin }}
       title="add item"
       onPress={addItem}
     />
@@ -92,7 +104,7 @@ export default function ({ defaultName }: PersonWithItemsParams) {
     <View style={{ flex: 1 }}>
 
       <TextInput
-        value={name}
+        value={person.name}
         onChangeText={setName}
         style={styles.name}
         selectionColor={Colors[theme].tint}
@@ -101,15 +113,16 @@ export default function ({ defaultName }: PersonWithItemsParams) {
       />
 
       <FlatList
-        ref={ref_FlatList}
-        data={items}
+        // ref={ref_FlatList}
+        data={person.items}
         keyExtractor={item => item.id}
         // onScrollEndDrag={onScrollEndDrag}
 
         contentContainerStyle={styles.itemsContainer}
 
+        ListHeaderComponent={ListHeaderComponent}
         renderItem={renderItem}
-        ListFooterComponent={ListFooterComponent}
+        // ListFooterComponent={ListFooterComponent}
       />
 
     </View>
@@ -127,10 +140,13 @@ const makeStyles = () => {
       fontWeight: "bold",
       textDecorationLine: "underline",
       color: Colors[theme].text,
-      margin: Layout.margin,
+      // margin: Layout.margin,
+
     },
     itemsContainer: {
       alignItems: "center",
+      // margin: Layout.margin,
+      // borderColor: 'red', borderWidth: 1,
     },
     itemAmount: {
       color: Colors[theme].text,
