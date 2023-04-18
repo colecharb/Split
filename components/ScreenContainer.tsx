@@ -3,8 +3,10 @@ import { KeyboardAvoidingView, KeyboardAvoidingViewProps } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Layout from "../constants/Layout";
 
-export default function ({ children, ...props }: { children: ReactNode } & KeyboardAvoidingViewProps) {
-
+export default function ({
+  children,
+  ...props
+}: { children: ReactNode } & KeyboardAvoidingViewProps) {
   const safeAreaInsets = useSafeAreaInsets();
 
   return (
@@ -14,12 +16,12 @@ export default function ({ children, ...props }: { children: ReactNode } & Keybo
         padding: Layout.margin,
         // borderColor: 'red', borderWidth: 2,
         marginTop: safeAreaInsets.top,
-        marginBottom: safeAreaInsets.bottom
+        marginBottom: safeAreaInsets.bottom,
       }}
-      behavior='height'
+      behavior="height"
       {...props}
     >
       {children}
     </KeyboardAvoidingView>
-  )
+  );
 }
