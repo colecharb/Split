@@ -119,8 +119,6 @@ const makeStyles = () => {
     itemsContainer: {
       alignItems: "center",
       // margin: Layout.margin,
-      borderColor: "red",
-      borderWidth: 1,
     },
     itemAmount: {
       color: Colors[theme].text,
@@ -128,7 +126,6 @@ const makeStyles = () => {
       textAlign: "center",
       fontVariant: ["tabular-nums"],
       width: "100%",
-      // borderWidth: 1, borderColor: 'red',
     },
   });
 };
