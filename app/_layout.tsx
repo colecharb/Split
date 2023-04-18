@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
+import { SplitProvider } from '../contexts/Split';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -43,9 +44,11 @@ function RootLayoutNav() {
   return (
     <>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(split)" options={{ headerShown: false }} />
-        </Stack>
+        <SplitProvider>
+          <Stack>
+            <Stack.Screen name="(split)" options={{ headerShown: false }} />
+          </Stack>
+        </SplitProvider>
       </ThemeProvider>
     </>
   );
