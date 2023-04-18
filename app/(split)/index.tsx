@@ -46,6 +46,7 @@ export default function EnterTotalScreen() {
         href="items"
         title="Next"
         // onPress={() => {}}
+        style={!totalValid ? { opacity: 0.5 } : null}
         disabled={!totalValid}
       />
     </ScreenContainer>
