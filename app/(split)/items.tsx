@@ -1,73 +1,44 @@
 import { Text, View } from "../../components/Themed";
-import { useSearchParams } from "expo-router";
 import ScreenContainer from "../../components/ScreenContainer";
-import PersonWithItems, { Person } from "../../components/PersonWithItems";
+import PersonWithItems from "../../components/PersonWithItems";
 import useColorScheme from "../../utils/useColorScheme";
 import { StyleSheet } from "react-native";
 import Colors from "../../constants/Colors";
 import Layout from "../../constants/Layout";
 import { LinkButton } from "../../components/Buttons";
-import { useState } from "react";
-import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'uuid';
-
-const defaultPersons: Person[] = [
-  { name: '', items: [], id: uuidv4() },
-  { name: '', items: [], id: uuidv4() },
-]
+import { useContext } from "react";
+import "react-native-get-random-values";
+import { SplitContext } from "../../contexts/Split";
 
 export default function () {
-
   const styles = makeStyles();
-  const { total } = useSearchParams();
 
-  const [persons, setPersons] = useState<Person[]>(defaultPersons);
-
-
-  // helper function, returns a function that sets persons[index] to the supplied person.
-  function setPerson(index: number) {
-    return (person: Person) => setPersons(prevPersons => [
-      ...prevPersons.slice(0, index),
-      person,
-      ...prevPersons.slice(index + 1)
-    ]);
-  }
+  const split = useContext(SplitContext);
 
   return (
     <ScreenContainer>
-
-      <Text style={styles.total}>
-        ${total}
-      </Text>
+      <Text style={styles.total}>${split.total.toFixed(2)}</Text>
 
       <View style={styles.personsContainer}>
-
-        {persons.map((person, index) => (
+        {split.persons.map((person, index) => (
           <PersonWithItems
             key={person.id}
             defaultName={`Person ${index + 1}`}
             person={person}
-            setPerson={setPerson(index)}
+            setPerson={split.setPerson(index)}
           />
         ))}
-
       </View>
 
       <LinkButton
         title="Next"
-        href={{
-          pathname: 'summary',
-          params: { persons: JSON.stringify(persons) }
-        }}
+        href="summary"
       />
-
     </ScreenContainer>
   );
 }
 
-
 const makeStyles = () => {
-
   const theme = useColorScheme();
 
   return StyleSheet.create({
@@ -82,6 +53,6 @@ const makeStyles = () => {
       flex: 1,
       flexDirection: "row",
       // borderColor: 'red', borderWidth: 1,
-    }
+    },
   });
-}
+};
