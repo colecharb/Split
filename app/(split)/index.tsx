@@ -35,7 +35,7 @@ export default function EnterTotalScreen() {
     <ScreenContainer>
       <View style={styles.container}>
         <MonetaryInput
-          autoFocus
+          // autoFocus
           placeholder="0.00"
           value={totalInput}
           onChangeText={onChangeTotal}
