@@ -12,7 +12,6 @@ export default function (props: TextInputProps) {
     <View style={{ flexDirection: "row", }}>
       <Text style={styles.amountStyle}>$</Text>
       <TextInput
-
         keyboardType="numeric"
         style={styles.amountStyle}
         {...props}
