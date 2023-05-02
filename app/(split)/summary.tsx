@@ -45,7 +45,9 @@ export default function () {
           />
         );
       })}
-      {/* <Text>{JSON.stringify(split.persons, null, "  ")}</Text> */}
+
+      {/* <Text style={styles.sectionTitle}>Persons Data</Text>
+      <Text>{JSON.stringify(split.persons, null, "  ")}</Text> */}
     </ScreenContainer>
   );
 }

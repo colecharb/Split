@@ -7,30 +7,38 @@ import Layout from "../constants/Layout";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { Person } from "../contexts/Split";
+import { useEffect, useRef, useState } from "react";
 
 export type ItemData = {
   id: string; // for selecting and editing individual items
   amount: number;
 };
 
-function Item({ id, amount }: ItemData) {
+export type ItemComponentProps = ItemData & {
+  setAmount: (newAmount: number) => void;
+  removeItem: () => void;
+};
+
+function Item({ id, amount, setAmount, removeItem }: ItemComponentProps) {
   // const ref_TextInput = useRef<TextInput>(null);
+
+  const [inputText, setInputText] = useState("");
 
   const styles = makeStyles();
 
   return (
-    <Pressable
-    // onPress={() => ref_TextInput.current?.focus()}
-    >
-      {/* <TextInput
+    <Pressable onPress={removeItem}>
+      <TextInput
         autoFocus
         keyboardType="numeric"
-        ref={ref_TextInput}
+        // ref={ref_TextInput}
         style={styles.itemAmount}
-      // value={amount}
-      /> */}
-
-      <Text style={styles.itemAmount}>{amount.toFixed(2)}</Text>
+        value={inputText}
+        onChangeText={setInputText}
+        onEndEditing={() => {
+          parseFloat(inputText) > 0 ? setAmount(parseFloat(inputText)) : removeItem();
+        }}
+      />
     </Pressable>
   );
 }
@@ -41,11 +49,14 @@ type PersonWithItemsParams = {
   setPerson: (person: Person) => void; // sets state in parent
 };
 
-export default function ({
-  defaultName,
-  person,
-  setPerson,
-}: PersonWithItemsParams) {
+export default function ({ defaultName, person, setPerson }: PersonWithItemsParams) {
+  const theme = useColorScheme();
+  const styles = makeStyles();
+
+  useEffect(() => {
+    console.log(JSON.stringify(person, null, "  "));
+  });
+
   const setName = (name: string) => {
     name = name.trim();
     setPerson({ ...person, name });
@@ -55,8 +66,11 @@ export default function ({
     setPerson({ ...person, items });
   };
 
-  const theme = useColorScheme();
-  const styles = makeStyles();
+  const setItem = (index: number) => {
+    return (item: ItemData) => {
+      setItems([...person.items.slice(0, index), item, ...person.items.slice(index + 1)]);
+    };
+  };
 
   const addItem = () => {
     const newItem: ItemData = {
@@ -66,10 +80,18 @@ export default function ({
     setItems([newItem, ...person.items]);
   };
 
-  const renderItem = ({ item: { id, amount } }: { item: ItemData }) => (
+  const renderItem = ({ item, index }: { item: ItemData; index: number }) => (
     <Item
-      id={id}
-      amount={amount}
+      id={item.id}
+      amount={item.amount}
+      setAmount={newAmount => {
+        setItem(index)({ ...item, amount: newAmount });
+        console.log(`Setting item at index ${index} to ${newAmount}`);
+      }}
+      removeItem={() => {
+        setItems([...person.items.slice(0, index), ...person.items.slice(index + 1)]);
+        console.log("Removing item at index", index);
+      }}
     />
   );
 
@@ -94,7 +116,7 @@ export default function ({
       <View style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}>
         <FlatList
           data={person.items}
-          keyExtractor={item => item.id}
+          keyExtractor={(item, index) => item.id}
           contentContainerStyle={styles.itemsContainer}
           ListHeaderComponent={ListHeaderComponent}
           renderItem={renderItem}
