@@ -61,6 +61,10 @@ export const SplitProvider = ({ children }: { children: ReactNode }) => {
   const [persons, setPersons] = useState<Person[]>(defaultPersons);
   const [tip, setTip] = useState<number>(0);
 
+  useEffect(() => {
+    console.log("PERSONS: \n" + JSON.stringify(persons, null, "  "));
+  }, [persons]);
+
   const resetPersons = () => setPersons(defaultPersons);
 
   const setPerson = (index: number) => {
