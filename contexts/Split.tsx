@@ -69,11 +69,9 @@ export const SplitProvider = ({ children }: { children: ReactNode }) => {
 
   const setPerson = (index: number) => {
     return (person: Person) => {
-      const personalTotal = person.items.length
-        ? person.items
-            .map(item => item.amount)
-            .reduce((prevAmount, currentAmount) => prevAmount + currentAmount)
-        : 0;
+      const personalTotal = person.items
+        .map((item) => item.amount)
+        .reduce((prevAmount, currentAmount) => prevAmount + currentAmount);
 
       setPersons(prevPersons => [
         ...prevPersons.slice(0, index),
