@@ -1,4 +1,4 @@
-import { Text, View } from "./Themed";
+import { View } from "./Themed";
 import { FlatList, Pressable, StyleSheet, TextInput } from "react-native";
 import useColorScheme from "../utils/useColorScheme";
 import Colors from "../constants/Colors";
@@ -7,7 +7,7 @@ import Layout from "../constants/Layout";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { Person } from "../contexts/Split";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 export type ItemData = {
   id: string; // for selecting and editing individual items
@@ -26,6 +26,15 @@ function Item({ id, amount, setAmount, removeItem }: ItemComponentProps) {
 
   const styles = makeStyles();
 
+  const onEndEditing = () => {
+    parseFloat(inputText) > 0 ? setAmount(parseFloat(inputText)) : removeItem();
+    if (parseFloat(inputText) > 0) {
+      const inputAsFloat = parseFloat(inputText);
+      setInputText(inputAsFloat.toFixed(2));
+      setAmount(inputAsFloat);
+    }
+  };
+
   return (
     <Pressable onPress={removeItem}>
       <TextInput
@@ -35,9 +44,7 @@ function Item({ id, amount, setAmount, removeItem }: ItemComponentProps) {
         style={styles.itemAmount}
         value={inputText}
         onChangeText={setInputText}
-        onEndEditing={() => {
-          parseFloat(inputText) > 0 ? setAmount(parseFloat(inputText)) : removeItem();
-        }}
+        onEndEditing={onEndEditing}
       />
     </Pressable>
   );
@@ -49,13 +56,9 @@ type PersonWithItemsParams = {
   setPerson: (person: Person) => void; // sets state in parent
 };
 
-export default function ({ defaultName, person, setPerson }: PersonWithItemsParams) {
+function PersonWithItems({ defaultName, person, setPerson }: PersonWithItemsParams) {
   const theme = useColorScheme();
   const styles = makeStyles();
-
-  useEffect(() => {
-    console.log(JSON.stringify(person, null, "  "));
-  });
 
   const setName = (name: string) => {
     name = name.trim();
@@ -75,7 +78,7 @@ export default function ({ defaultName, person, setPerson }: PersonWithItemsPara
   const addItem = () => {
     const newItem: ItemData = {
       id: uuidv4(),
-      amount: Math.random() * 14 + 1,
+      amount: 0,
     };
     setItems([newItem, ...person.items]);
   };
@@ -120,6 +123,7 @@ export default function ({ defaultName, person, setPerson }: PersonWithItemsPara
           contentContainerStyle={styles.itemsContainer}
           ListHeaderComponent={ListHeaderComponent}
           renderItem={renderItem}
+          keyboardShouldPersistTaps="handled"
         />
       </View>
     </View>
@@ -151,3 +155,5 @@ const makeStyles = () => {
     },
   });
 };
+
+export default memo(PersonWithItems);
