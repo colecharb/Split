@@ -24,6 +24,7 @@ function Item({ id, amount, setAmount, removeItem }: ItemComponentProps) {
 
   const [inputText, setInputText] = useState("");
 
+  const theme = useColorScheme();
   const styles = makeStyles();
 
   const onEndEditing = () => {
@@ -39,6 +40,7 @@ function Item({ id, amount, setAmount, removeItem }: ItemComponentProps) {
     <Pressable onPress={removeItem}>
       <TextInput
         autoFocus
+        selectionColor={Colors[theme].text}
         keyboardType="numeric"
         // ref={ref_TextInput}
         style={styles.itemAmount}
