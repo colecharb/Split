@@ -1,0 +1,28 @@
+{
+  "cli": {
+    "version": ">= 3.11.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "beta": {
+      "channel": "beta",
+      "ios": {
+        "resourceClass": "m-medium"
+      }
+    },
+    "production": {}
+  },
+  "submit": {
+    "beta": {
+      "ios": {
+        "appleId": "colecharbconneau@gmail.com",
+        "ascAppId": "6448852810",
+        "appleTeamId": "N65826X3KR"
+      }
+    },
+    "production": {}
+  }
+}
