@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Split_app",
+    "name": "Split",
     "slug": "split",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,11 +12,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.colecharb.split",
+      "buildNumber": "6",
+      "bitcode": false
     },
     "android": {
       "adaptiveIcon": {
@@ -27,6 +28,11 @@
     "web": {
       "bundler": "metro",
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9b4ccedd-d794-4fef-bc5b-10d41e7a7b10"
+      }
     }
   }
 }
