@@ -1,10 +1,11 @@
 import ScreenContainer from "../../components/ScreenContainer";
 import { Text, View } from "../../components/Themed";
-import { useContext } from "react";
+import { SetStateAction, useContext, useState } from "react";
 import { SplitContext } from "../../contexts/Split";
 import useColorScheme from "../../utils/useColorScheme";
-import { StyleSheet, ViewProps } from "react-native";
+import { Keyboard, ScrollView, StyleSheet, TextInput, ViewProps } from "react-native";
 import Layout from "../../constants/Layout";
+import Colors from "../../constants/Colors";
 
 export default function () {
   const split = useContext(SplitContext);
@@ -12,34 +13,64 @@ export default function () {
   const styles = makeStyles();
 
   return (
-    <ScreenContainer>
+    <ScreenContainer
+      onPress={() => Keyboard.dismiss()}
+      style={{ justifyContent: "center" }}
+    >
+      <Text style={styles.sectionTitle}>Summary</Text>
+
       <TextAndAmount
         text="Total"
         amount={split.total}
-        dollarSign
-        style={{ marginBottom: Layout.margin }}
+
+        // style={{ marginBottom: Layout.margin }}
       />
-      {split.persons.map((person, index) => (
+      <TipEntry />
+
+      <TextAndAmount
+        dollarSign
+        text="Grand Total"
+        amount={split.total + split.tip}
+        style={{ marginVertical: Layout.margin }}
+      />
+      {/* {split.persons.map((person, index) => (
         <TextAndAmount
           text={person.name || `Person ${index + 1}`}
           amount={person.total}
           key={person.id}
         />
-      ))}
-      <TextAndAmount
+      ))} */}
+      {/* <TextAndAmount
         text="Shared"
         amount={split.shared}
         style={{ marginVertical: Layout.margin }}
-      />
+      /> */}
 
-      <Text style={styles.sectionTitle}>Totals Owed</Text>
+      {/* <Text style={styles.sectionTitle}>Totals Pre-Tip</Text> */}
 
-      {split.persons.map((person, index) => {
-        const totalOwed = person.total + split.shared / split.persons.length;
+      {/* {split.persons.map((person, index) => {
+        const totalPreTip = person.total + split.shared / split.persons.length;
         return (
           <TextAndAmount
             text={person.name || `Person ${index + 1}`}
-            amount={totalOwed}
+            amount={totalPreTip}
+            dollarSign
+            key={person.id}
+          />
+        );
+      })} */}
+
+      {/* <Text style={styles.sectionTitle}>Tip?</Text> */}
+
+      <Text style={styles.sectionTitle}>The Split</Text>
+
+      {split.persons.map((person, index) => {
+        const totalPreTip = person.total + split.shared / split.persons.length;
+        const totalPostTip = totalPreTip + (split.tip * totalPreTip) / split.total;
+        return (
+          <TextAndAmount
+            text={person.name || `Person ${index + 1}`}
+            amount={totalPostTip}
             dollarSign
             key={person.id}
           />
@@ -78,11 +109,53 @@ function TextAndAmount({
   );
 }
 
+function TipEntry({ style, ...viewProps }: {} & ViewProps) {
+  const theme = useColorScheme();
+  const styles = makeStyles();
+  const split = useContext(SplitContext);
+
+  const [tipInput, setTipInput] = useState("");
+
+  const onEndEditing = () => {
+    const tipAsFloat = tipInput ? parseFloat(tipInput) : 0;
+    setTipInput(tipAsFloat ? tipAsFloat.toFixed(2) : "");
+    split.setTip(tipAsFloat);
+  };
+
+  return (
+    <View
+      style={[styles.textAndAmountView, style]}
+      {...viewProps}
+    >
+      <Text>Tip</Text>
+      <TextInput
+        keyboardType="numeric"
+        selectionColor={Colors[theme].text}
+        placeholder="0.00"
+        placeholderTextColor={Colors[theme].medium}
+        style={[
+          styles.money,
+          styles.tipInput,
+          { textDecorationColor: tipInput ? Colors[theme].text : Colors[theme].medium },
+        ]}
+        value={tipInput}
+        onChangeText={setTipInput}
+        onEndEditing={onEndEditing}
+      />
+    </View>
+  );
+}
+
 const makeStyles = () => {
   const theme = useColorScheme();
   return StyleSheet.create({
     money: {
+      color: Colors[theme].text,
+      fontSize: Layout.fontSize,
       fontVariant: ["tabular-nums"],
+    },
+    tipInput: {
+      textDecorationLine: "underline",
     },
     textAndAmountView: {
       flexDirection: "row",
