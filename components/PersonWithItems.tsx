@@ -8,6 +8,7 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { Person } from "../contexts/Split";
 import { memo, useEffect, useRef, useState } from "react";
+import { FontAwesome } from "@expo/vector-icons";
 
 export type ItemData = {
   id: string; // for selecting and editing individual items
@@ -37,7 +38,12 @@ function Item({ id, amount, setAmount, removeItem }: ItemComponentProps) {
   };
 
   return (
-    <Pressable onPress={removeItem}>
+    <View style={styles.itemAmountContainer}>
+      <FontAwesome
+        name="trash-o"
+        style={[styles.itemAmount, { color: Colors[theme].subtle, marginRight: Layout.margin }]}
+        onPress={removeItem}
+      />
       <TextInput
         autoFocus
         selectionColor={Colors[theme].text}
@@ -48,7 +54,7 @@ function Item({ id, amount, setAmount, removeItem }: ItemComponentProps) {
         onChangeText={setInputText}
         onEndEditing={onEndEditing}
       />
-    </Pressable>
+    </View>
   );
 }
 
@@ -62,8 +68,11 @@ function PersonWithItems({ defaultName, person, setPerson }: PersonWithItemsPara
   const theme = useColorScheme();
   const styles = makeStyles();
 
-  const setName = (name: string) => {
-    name = name.trim();
+  const [nameInput, setNameInput] = useState(person.name);
+
+  const setName = () => {
+    const name = nameInput.trim();
+    setNameInput(name);
     setPerson({ ...person, name });
   };
 
@@ -89,7 +98,7 @@ function PersonWithItems({ defaultName, person, setPerson }: PersonWithItemsPara
     <Item
       id={item.id}
       amount={item.amount}
-      setAmount={newAmount => {
+      setAmount={(newAmount) => {
         setItem(index)({ ...item, amount: newAmount });
         console.log(`Setting item at index ${index} to ${newAmount}`);
       }}
@@ -100,34 +109,41 @@ function PersonWithItems({ defaultName, person, setPerson }: PersonWithItemsPara
     />
   );
 
-  const ListHeaderComponent = () => (
+  const AddItemButton = () => (
     <Button
-      viewStyle={{ margin: Layout.margin }}
-      title="add item"
+      viewStyle={{}}
+      title="+"
       onPress={addItem}
     />
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, minWidth: 100 }}>
       <TextInput
-        value={person.name}
-        onChangeText={setName}
+        autoFocus
+        value={nameInput}
+        onChangeText={setNameInput}
+        onEndEditing={setName}
         placeholder={defaultName}
         placeholderTextColor={Colors[theme].medium}
         style={styles.name}
         selectionColor={Colors[theme].tint}
       />
-      <View style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}>
+
+      <View style={{ flex: 1, flexDirection: "row" }}>
+        {/* <View style={{ flex: 1 }} /> */}
         <FlatList
           data={person.items}
-          keyExtractor={(item, index) => item.id}
+          keyExtractor={(item) => item.id}
           contentContainerStyle={styles.itemsContainer}
-          ListHeaderComponent={ListHeaderComponent}
+          // ListHeaderComponent={ListHeaderComponent}
           renderItem={renderItem}
           keyboardShouldPersistTaps="handled"
         />
+        {/* <View style={{ flex: 1 }} /> */}
       </View>
+
+      <AddItemButton />
     </View>
   );
 }
@@ -140,20 +156,37 @@ const makeStyles = () => {
       textAlign: "center",
       fontSize: 35,
       fontWeight: "bold",
-      textDecorationLine: "underline",
+      // textDecorationLine: "underline",
       color: Colors[theme].text,
+      borderBottomColor: Colors[theme].text,
+      borderBottomWidth: Layout.borderWidth * 2,
       // margin: Layout.margin,
     },
     itemsContainer: {
-      alignItems: "center",
+      includeFontPadding: false,
+      padding: Layout.margin,
+      overflow: "visible",
+      // alignItems: "flex-end",
+      // alignContent: "center",
+      // borderColor: "yellow",
+      // borderWidth: 1,
       // margin: Layout.margin,
     },
     itemAmount: {
       color: Colors[theme].text,
       fontSize: 30,
-      textAlign: "center",
+      textAlign: "right",
       fontVariant: ["tabular-nums"],
-      width: "100%",
+      // borderWidth: 1,
+      // borderColor: "grey",
+      // width: "100%",
+    },
+    itemAmountContainer: {
+      // borderBottomWidth: Layout.borderWidth,
+      borderColor: Colors[theme].subtle,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
     },
   });
 };

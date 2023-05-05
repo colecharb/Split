@@ -2,33 +2,59 @@ import { Text, View } from "../../components/Themed";
 import ScreenContainer from "../../components/ScreenContainer";
 import PersonWithItems from "../../components/PersonWithItems";
 import useColorScheme from "../../utils/useColorScheme";
-import { StyleSheet } from "react-native";
+import { FlatList, ListRenderItem, StyleSheet } from "react-native";
 import Colors from "../../constants/Colors";
 import Layout from "../../constants/Layout";
-import { LinkButton } from "../../components/Buttons";
+import { Button, LinkButton } from "../../components/Buttons";
 import { useContext } from "react";
 import "react-native-get-random-values";
-import { SplitContext } from "../../contexts/Split";
+import { Person, SplitContext } from "../../contexts/Split";
 
 export default function () {
+  const theme = useColorScheme();
   const styles = makeStyles();
 
   const split = useContext(SplitContext);
+
+  const renderPerson = ({ item: person, index }: { item: Person; index: number }) => (
+    <View style={styles.personWithItemsContainer}>
+      <PersonWithItems
+        key={person.id}
+        defaultName={`Person ${index + 1}`}
+        person={person}
+        setPerson={split.setPerson(index)}
+      />
+    </View>
+  );
+
+  const ItemSeparatorComponent = () => (
+    <View style={{ width: Layout.borderWidth, backgroundColor: Colors[theme].subtle }} />
+  );
+
+  const AddPersonComponent = () => (
+    <Button
+      title="+"
+      viewStyle={{ paddingHorizontal: Layout.margin * 2 }}
+      onPress={() => {
+        split.addPerson();
+      }}
+    />
+  );
 
   return (
     <ScreenContainer>
       <Text style={styles.total}>${split.total.toFixed(2)}</Text>
 
-      <View style={styles.personsContainer}>
-        {split.persons.map((person, index) => (
-          <PersonWithItems
-            key={person.id}
-            defaultName={`Person ${index + 1}`}
-            person={person}
-            setPerson={split.setPerson(index)}
-          />
-        ))}
-      </View>
+      <FlatList
+        horizontal
+        keyboardShouldPersistTaps="handled" // allows button presses in this flatlist when keyboard is open
+        data={split.persons}
+        renderItem={renderPerson}
+        style={styles.personsFlatList}
+        contentContainerStyle={styles.personsContainer}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        ListFooterComponent={AddPersonComponent}
+      />
 
       <LinkButton
         title="Next"
@@ -47,12 +73,20 @@ const makeStyles = () => {
       color: Colors[theme].text,
       fontSize: 50,
       fontVariant: ["tabular-nums"],
-      marginBottom: Layout.margin,
+      // marginBottom: Layout.margin,
     },
+    personsFlatList: {},
     personsContainer: {
-      flex: 1,
-      flexDirection: "row",
-      // borderColor: 'red', borderWidth: 1,
+      padding: Layout.margin,
+      // flex: 1,
+      // flexDirection: "row",
+      // borderColor: "red",
+      // borderWidth: 1,
+    },
+    personWithItemsContainer: {
+      padding: Layout.margin,
+      // borderColor: "green",
+      // borderWidth: 1,
     },
   });
 };
