@@ -32,6 +32,9 @@ export type SplitContextData = {
   /** SetStateAction for persons */
   setPersons: React.Dispatch<SetStateAction<Person[]>>;
 
+  /** Add new empty person to end of persons using setPersons. */
+  addPerson: () => void;
+
   /** Reset persons state to default value */
   resetPersons: () => void;
 
@@ -52,10 +55,7 @@ export type SplitContextData = {
 export const SplitContext = createContext({} as SplitContextData);
 
 export const SplitProvider = ({ children }: { children: ReactNode }) => {
-  const defaultPersons: Person[] = [
-    { name: "", items: [], total: 0, id: uuidv4() },
-    { name: "", items: [], total: 0, id: uuidv4() },
-  ];
+  const defaultPersons: Person[] = [{ name: "", items: [], total: 0, id: uuidv4() }];
 
   const [total, setTotal] = useState<number>(0);
   const [persons, setPersons] = useState<Person[]>(defaultPersons);
@@ -69,11 +69,13 @@ export const SplitProvider = ({ children }: { children: ReactNode }) => {
 
   const setPerson = (index: number) => {
     return (person: Person) => {
-      const personalTotal = person.items
-        .map((item) => item.amount)
-        .reduce((prevAmount, currentAmount) => prevAmount + currentAmount);
+      const personalTotal = person.items.length
+        ? person.items
+            .map((item) => item.amount)
+            .reduce((prevAmount, currentAmount) => prevAmount + currentAmount)
+        : 0;
 
-      setPersons(prevPersons => [
+      setPersons((prevPersons) => [
         ...prevPersons.slice(0, index),
         { ...person, total: personalTotal },
         ...prevPersons.slice(index + 1),
@@ -81,10 +83,22 @@ export const SplitProvider = ({ children }: { children: ReactNode }) => {
     };
   };
 
+  const addPerson = () => {
+    setPersons((prevPersons) => [
+      ...prevPersons,
+      {
+        name: "",
+        items: [],
+        total: 0,
+        id: uuidv4(),
+      },
+    ]);
+  };
+
   const shared =
     total -
     persons
-      .map(person => person.total)
+      .map((person) => person.total)
       .reduce((prevTotal, currentTotal) => prevTotal + currentTotal);
 
   const splitContextData: SplitContextData = {
@@ -93,15 +107,12 @@ export const SplitProvider = ({ children }: { children: ReactNode }) => {
     persons,
     setPersons,
     setPerson,
+    addPerson,
     resetPersons,
     tip,
     setTip,
     shared,
   };
 
-  return (
-    <SplitContext.Provider value={splitContextData}>
-      {children}
-    </SplitContext.Provider>
-  );
+  return <SplitContext.Provider value={splitContextData}>{children}</SplitContext.Provider>;
 };
