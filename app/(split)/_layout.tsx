@@ -16,12 +16,12 @@ export default function StackLayout() {
           headerShown: false,
           // headerTransparent: true,
           // headerLargeTitle: true,
-        }}>
-
+        }}
+      >
         <Stack.Screen
           name="index"
           options={{
-            title: 'Enter Total',
+            title: "Enter Total",
             // headerRight: () => (
             //   <Link href="/modal" asChild>
             //     <Pressable>
@@ -41,7 +41,13 @@ export default function StackLayout() {
         <Stack.Screen
           name="items"
           options={{
-            title: "Enter Items"
+            title: "Enter Items",
+          }}
+        />
+        <Stack.Screen
+          name="summary"
+          options={{
+            title: "Summary",
           }}
         />
       </Stack>
