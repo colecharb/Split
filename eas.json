@@ -5,7 +5,7 @@
   },
   "build": {
     "beta": {
-      "autoIncrement": true,
+      "extends": "production",
       "channel": "beta",
       "ios": {
         "resourceClass": "m-medium"
@@ -21,6 +21,8 @@
         "appleTeamId": "N65826X3KR"
       }
     },
-    "production": {}
+    "production": {
+      "autoIncrement": true
+    }
   }
 }
