@@ -6,8 +6,6 @@ import { Button, LinkButton } from "../../components/Buttons";
 import ScreenContainer from "../../components/ScreenContainer";
 import { useContext, useState } from "react";
 import { SplitContext } from "../../contexts/Split";
-import { Link } from "expo-router";
-import { useLink } from "expo-router/build/link/useRouter";
 
 export default function EnterTotalScreen() {
   const split = useContext(SplitContext);
