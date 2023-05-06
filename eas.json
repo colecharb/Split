@@ -4,11 +4,8 @@
     "promptToConfigurePushNotifications": false
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
     "beta": {
+      "autoIncrement": true,
       "channel": "beta",
       "ios": {
         "resourceClass": "m-medium"
