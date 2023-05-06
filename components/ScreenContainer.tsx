@@ -1,9 +1,8 @@
 import { ReactNode } from "react";
 import {
-  GestureResponderEvent,
   KeyboardAvoidingView,
   KeyboardAvoidingViewProps,
-  Pressable,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Layout from "../constants/Layout";
@@ -11,11 +10,11 @@ import Layout from "../constants/Layout";
 export default function ({
   children,
   style,
-  onPress,
+  noPadding,
   ...props
 }: {
   children: ReactNode;
-  onPress?: ((event: GestureResponderEvent) => void) | null | undefined;
+  noPadding?: boolean;
 } & KeyboardAvoidingViewProps) {
   const safeAreaInsets = useSafeAreaInsets();
 
@@ -34,15 +33,17 @@ export default function ({
       behavior="padding"
       {...props}
     >
-      <Pressable
-        onPress={onPress}
+      {/* <Pressable
         style={{
           flex: 1,
           padding: Layout.margin,
         }}
-      >
+      > */}
+      <View style={{ flex: 1, padding: noPadding ? undefined : Layout.margin }}>
         {children}
-      </Pressable>
+      </View>
+
+      {/* </Pressable> */}
     </KeyboardAvoidingView>
   );
 }
