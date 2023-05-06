@@ -1,11 +1,12 @@
 import ScreenContainer from "../../components/ScreenContainer";
 import { Text, View } from "../../components/Themed";
-import { SetStateAction, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { SplitContext } from "../../contexts/Split";
 import useColorScheme from "../../utils/useColorScheme";
-import { Keyboard, ScrollView, StyleSheet, TextInput, ViewProps } from "react-native";
+import { Keyboard, StyleSheet, TextInput, ViewProps } from "react-native";
 import Layout from "../../constants/Layout";
 import Colors from "../../constants/Colors";
+import { Button } from "../../components/Buttons";
 
 export default function () {
   const split = useContext(SplitContext);
@@ -13,10 +14,7 @@ export default function () {
   const styles = makeStyles();
 
   return (
-    <ScreenContainer
-      onPress={() => Keyboard.dismiss()}
-      style={{ justifyContent: "center" }}
-    >
+    <ScreenContainer style={{ justifyContent: "center" }}>
       <Text style={styles.sectionTitle}>Summary</Text>
 
       <TextAndAmount
@@ -66,7 +64,8 @@ export default function () {
 
       {split.persons.map((person, index) => {
         const totalPreTip = person.total + split.shared / split.persons.length;
-        const totalPostTip = totalPreTip + (split.tip * totalPreTip) / split.total;
+        const totalPostTip =
+          totalPreTip + (split.tip * totalPreTip) / split.total;
         return (
           <TextAndAmount
             text={person.name || `Person ${index + 1}`}
@@ -79,6 +78,13 @@ export default function () {
 
       {/* <Text style={styles.sectionTitle}>Persons Data</Text>
       <Text>{JSON.stringify(split.persons, null, "  ")}</Text> */}
+
+      <View style={{ flex: 1 }} />
+
+      <Button
+        title="done"
+        onPress={() => Keyboard.dismiss()}
+      />
     </ScreenContainer>
   );
 }
