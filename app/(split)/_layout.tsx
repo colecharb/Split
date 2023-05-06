@@ -1,12 +1,10 @@
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { Stack } from "expo-router";
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
 
 export default function StackLayout() {
-
   return (
     <>
       {/* <StatusBar hidden /> */}
