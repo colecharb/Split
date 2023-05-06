@@ -11,7 +11,9 @@
         "resourceClass": "m-medium"
       }
     },
-    "production": {}
+    "production": {
+      "autoIncrement": true
+    }
   },
   "submit": {
     "beta": {
@@ -21,8 +23,6 @@
         "appleTeamId": "N65826X3KR"
       }
     },
-    "production": {
-      "autoIncrement": true
-    }
+    "production": {}
   }
 }
