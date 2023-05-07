@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.colecharb.split",
-      "buildNumber": "13",
+      "buildNumber": "16",
       "bitcode": false
     },
     "android": {
