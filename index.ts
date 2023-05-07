@@ -6,6 +6,6 @@ ErrorUtils.setGlobalHandler((error, isFatal) => {
   console.error(error, isFatal);
 
   if (isFatal) {
-    Alert.alert("A fatal error occurred:", error);
+    Alert.alert("A fatal error occurred:", JSON.stringify(error, null, "  "));
   }
 });
