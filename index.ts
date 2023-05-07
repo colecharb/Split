@@ -1,5 +1,5 @@
 import 'expo-router/entry';
-import { Alert } from "react-native/types";
+import { Alert } from "react-native";
 
 ErrorUtils.setGlobalHandler((error, isFatal) => {
   // Log the error to your preferred error tracking service
