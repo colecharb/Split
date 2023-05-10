@@ -20,7 +20,12 @@ export type ItemComponentProps = ItemData & {
   removeItem: () => void;
 };
 
-function Item({ id, amount, setAmount, removeItem }: ItemComponentProps) {
+const Item = memo(function ({
+  id,
+  amount,
+  setAmount,
+  removeItem,
+}: ItemComponentProps) {
   // const ref_TextInput = useRef<TextInput>(null);
 
   const [inputText, setInputText] = useState("");
@@ -41,7 +46,10 @@ function Item({ id, amount, setAmount, removeItem }: ItemComponentProps) {
     <View style={styles.itemAmountContainer}>
       <FontAwesome
         name="trash-o"
-        style={[styles.itemAmount, { color: Colors[theme].subtle, marginRight: Layout.margin }]}
+        style={[
+          styles.itemAmount,
+          { color: Colors[theme].subtle, marginRight: Layout.margin },
+        ]}
         onPress={removeItem}
       />
       <TextInput
@@ -56,7 +64,7 @@ function Item({ id, amount, setAmount, removeItem }: ItemComponentProps) {
       />
     </View>
   );
-}
+});
 
 type PersonWithItemsParams = {
   defaultName: string;
@@ -64,7 +72,11 @@ type PersonWithItemsParams = {
   setPerson: (person: Person) => void; // sets state in parent
 };
 
-function PersonWithItems({ defaultName, person, setPerson }: PersonWithItemsParams) {
+function PersonWithItems({
+  defaultName,
+  person,
+  setPerson,
+}: PersonWithItemsParams) {
   const theme = useColorScheme();
   const styles = makeStyles();
 
@@ -82,7 +94,11 @@ function PersonWithItems({ defaultName, person, setPerson }: PersonWithItemsPara
 
   const setItem = (index: number) => {
     return (item: ItemData) => {
-      setItems([...person.items.slice(0, index), item, ...person.items.slice(index + 1)]);
+      setItems([
+        ...person.items.slice(0, index),
+        item,
+        ...person.items.slice(index + 1),
+      ]);
     };
   };
 
@@ -99,11 +115,16 @@ function PersonWithItems({ defaultName, person, setPerson }: PersonWithItemsPara
       id={item.id}
       amount={item.amount}
       setAmount={(newAmount) => {
+        console.log(
+          `Setting item at index ${index} from ${item.amount} to ${newAmount}`
+        );
         setItem(index)({ ...item, amount: newAmount });
-        console.log(`Setting item at index ${index} to ${newAmount}`);
       }}
       removeItem={() => {
-        setItems([...person.items.slice(0, index), ...person.items.slice(index + 1)]);
+        setItems([
+          ...person.items.slice(0, index),
+          ...person.items.slice(index + 1),
+        ]);
         console.log("Removing item at index", index);
       }}
     />
@@ -190,5 +211,13 @@ const makeStyles = () => {
     },
   });
 };
+
+// const personWithItemsPropsAreEqual = (
+//   prevProps: Readonly<PersonWithItemsParams>,
+//   nextProps: Readonly<PersonWithItemsParams>
+// ) =>
+//   prevProps.person.id === nextProps.person.id &&
+//   prevProps.person.name === nextProps.person.name &&
+//   prevProps.person.items === nextProps.person.items;
 
 export default memo(PersonWithItems);
