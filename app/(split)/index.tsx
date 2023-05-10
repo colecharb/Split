@@ -6,13 +6,14 @@ import { useContext, useState } from "react";
 import { SplitContext } from "../../contexts/Split";
 import useColorScheme from "../../utils/useColorScheme";
 import Colors from "../../constants/Colors";
+import MonetaryInput from "../../components/MonetaryInput";
 
 export default function EnterTotalScreen() {
   const split = useContext(SplitContext);
 
   const [totalInput, setTotalInput] = useState<string>("");
 
-  const theme = useColorScheme();
+  // const theme = useColorScheme();
   const styles = makeStyles();
 
   const onChangeTotal = (newTotalInput: string) => {
@@ -35,13 +36,13 @@ export default function EnterTotalScreen() {
   return (
     <ScreenContainer>
       <View style={styles.container}>
-        {/* <MonetaryInput
+        <MonetaryInput
           // autoFocus
           placeholder="0.00"
           value={totalInput}
           onChangeText={onChangeTotal}
-        /> */}
-        <View style={{ flexDirection: "row" }}>
+        />
+        {/* <View style={{ flexDirection: "row" }}>
           <Text style={styles.amountStyle}>$</Text>
           <TextInput
             keyboardType="numeric"
@@ -53,7 +54,7 @@ export default function EnterTotalScreen() {
           />
 
           <Button title="asdf" />
-        </View>
+        </View> */}
       </View>
 
       <LinkButton
